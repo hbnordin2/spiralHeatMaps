@@ -8,14 +8,12 @@
 spiralHeatMap <- function(message, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
-  x = list(
-    message = message
-  )
+  x = jsonlite::toJSON(message)
 
   # create widget
   htmlwidgets::createWidget(
     name = 'spiralHeatMap',
-    x,
+    x, # All data passed into widget
     width = width,
     height = height,
     package = 'spiralHeatMaps',
