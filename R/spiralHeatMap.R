@@ -15,7 +15,7 @@ spiralHeatMap <- function(message, width = NULL, height = NULL, elementId = NULL
   # create widget
   htmlwidgets::createWidget(
     name = 'spiralHeatMap',
-    x,
+    x, # All data passed into widget
     width = width,
     height = height,
     package = 'spiralHeatMaps',
