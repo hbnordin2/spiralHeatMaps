@@ -9,7 +9,7 @@ spiralHeatMap <- function(message, width = NULL, height = NULL, elementId = NULL
 
   # forward options using x
   x = list(
-    message = message
+    data = message
   )
 
   # create widget

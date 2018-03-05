@@ -11,7 +11,7 @@ HTMLWidgets.widget({
     return {
 
       renderValue: function(x) {
-var data =[{"name":"A","value":0.0817},{"name":"B","value":0.0149},{"name":"C","value":0.0278},{"name":"D","value":0.0425},{"name":"E","value":0.127},{"name":"F","value":0.0229},{"name":"G","value":0.0202},{"name":"H","value":0.0609},{"name":"I","value":0.0697},{"name":"J","value":0.0015},{"name":"K","value":0.0077},{"name":"L","value":0.0402},{"name":"M","value":0.0241},{"name":"N","value":0.0675},{"name":"O","value":0.0751},{"name":"P","value":0.0193},{"name":"Q","value":0.001},{"name":"R","value":0.0599},{"name":"S","value":0.0633},{"name":"T","value":0.0906},{"name":"U","value":0.0276},{"name":"V","value":0.0098},{"name":"W","value":0.0236},{"name":"X","value":0.0015},{"name":"Y","value":0.0197},{"name":"Z","value":0.0007}];
+var data =[{"name":"A","value":0.0817},{"name":"B","value":0.0149},{"name":"C","value":0.0278},{"name":"D","value":0.0425},{"name":"E","value":0.127}];
 
 var width = 960,
     height = 500,
