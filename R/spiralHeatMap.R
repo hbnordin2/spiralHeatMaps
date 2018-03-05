@@ -8,9 +8,7 @@
 spiralHeatMap <- function(message, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
-  x = list(
-    data = message
-  )
+  x = jsonlite::toJSON(message)
 
   # create widget
   htmlwidgets::createWidget(

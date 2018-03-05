@@ -11,7 +11,7 @@ HTMLWidgets.widget({
     return {
 
       renderValue: function(x) {
-var data =[{"name":"A","value":0.0817},{"name":"B","value":0.0149},{"name":"C","value":0.0278},{"name":"D","value":0.0425},{"name":"E","value":0.127}];
+var data = x;
 
 var width = 960,
     height = 500,
