@@ -11,100 +11,109 @@ HTMLWidgets.widget({
     return {
 
       renderValue: function(x) {
+var data =[{"name":"A","value":0.0817},{"name":"B","value":0.0149},{"name":"C","value":0.0278},{"name":"D","value":0.0425},{"name":"E","value":0.127},{"name":"F","value":0.0229},{"name":"G","value":0.0202},{"name":"H","value":0.0609},{"name":"I","value":0.0697},{"name":"J","value":0.0015},{"name":"K","value":0.0077},{"name":"L","value":0.0402},{"name":"M","value":0.0241},{"name":"N","value":0.0675},{"name":"O","value":0.0751},{"name":"P","value":0.0193},{"name":"Q","value":0.001},{"name":"R","value":0.0599},{"name":"S","value":0.0633},{"name":"T","value":0.0906},{"name":"U","value":0.0276},{"name":"V","value":0.0098},{"name":"W","value":0.0236},{"name":"X","value":0.0015},{"name":"Y","value":0.0197},{"name":"Z","value":0.0007}];
 
+var width = 960,
+    height = 500,
+    barHeight = height / 2 - 40;
 
-// Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
-    width = 600 - margin.left - margin.right,
-    height = 270 - margin.top - margin.bottom;
+var formatNumber = d3.format("s");
 
-// Parse the date / time
-var parseDate = d3.time.format("%d-%b-%y").parse;
+var color = d3.scale.ordinal()
+    .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
 
-// Set the ranges
-var x = d3.time.scale().range([0, width]);
-var y = d3.scale.linear().range([height, 0]);
+var svg = d3.select('body').append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width/2 + "," + height/2 + ")");
 
-// Define the axes
-var xAxis = d3.svg.axis().scale(x)
-    .orient("bottom").ticks(5);
+  data.sort(function(a,b) { return b.value - a.value; });
 
-var yAxis = d3.svg.axis().scale(y)
-    .orient("left").ticks(5);
+  var extent = d3.extent(data, function(d) { return d.value; });
+  var barScale = d3.scale.linear()
+      .domain(extent)
+      .range([0, barHeight]);
 
-// Define the line
-var valueline = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.close); });
+  var keys = data.map(function(d,i) { return d.name; });
+  var numBars = keys.length;
 
-// Adds the svg canvas
-var svg = d3.select(el)
-    .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
+  var x = d3.scale.linear()
+      .domain(extent)
+      .range([0, -barHeight]);
 
-// Get the data
-data = [
-{date:"1-May-12",close:58.13},
-{date:"30-Apr-12",close:53.98},
-{date:"27-Apr-12",close:67.00},
-{date:"26-Apr-12",close:89.70},
-{date:"25-Apr-12",close:99.00},
-{date:"24-Apr-12",close:130.28},
-{date:"23-Apr-12",close:166.70},
-{date:"20-Apr-12",close:234.98},
-{date:"19-Apr-12",close:345.44},
-{date:"18-Apr-12",close:443.34},
-{date:"17-Apr-12",close:543.70},
-{date:"16-Apr-12",close:580.13},
-{date:"13-Apr-12",close:605.23},
-{date:"12-Apr-12",close:622.77},
-{date:"11-Apr-12",close:626.20},
-{date:"10-Apr-12",close:628.44},
-{date:"9-Apr-12",close:636.23},
-{date:"5-Apr-12",close:633.68},
-{date:"4-Apr-12",close:624.31},
-{date:"3-Apr-12",close:629.32},
-{date:"2-Apr-12",close:618.63},
-{date:"30-Mar-12",close:599.55},
-{date:"29-Mar-12",close:609.86},
-{date:"28-Mar-12",close:617.62},
-{date:"27-Mar-12",close:614.48},
-{date:"26-Mar-12",close:606.98}
-];
+  var xAxis = d3.svg.axis()
+      .scale(x).orient("left")
+      .ticks(3)
+      .tickFormat(formatNumber);
 
-//d3.csv("data.csv", function(error, data) {
-   data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.close = +d.close;
-    });
+  var circles = svg.selectAll("circle")
+          .data(x.ticks(3))
+        .enter().append("circle")
+          .attr("r", function(d) {return barScale(d);})
+          .style("fill", "none")
+          .style("stroke", "black")
+          .style("stroke-dasharray", "2,2")
+          .style("stroke-width",".5px");
 
-    // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.close; })]);
+  var arc = d3.svg.arc()
+      .startAngle(function(d,i) { return (i * 2 * Math.PI) / numBars; })
+      .endAngle(function(d,i) { return ((i + 1) * 2 * Math.PI) / numBars; })
+      .innerRadius(0);
 
-    // Add the valueline path.
-    svg.append("path")
-        .attr("class", "line")
-        .attr("d", valueline(data));
+  var segments = svg.selectAll("path")
+          .data(data)
+        .enter().append("path")
+          .each(function(d) { d.outerRadius = 0; })
+          .style("fill", function (d) { return color(d.name); })
+          .attr("d", arc);
 
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+  segments.transition().ease("elastic").duration(1000).delay(function(d,i) {return (25-i)*100;})
+          .attrTween("d", function(d,index) {
+            var i = d3.interpolate(d.outerRadius, barScale(+d.value));
+            return function(t) { d.outerRadius = i(t); return arc(d,index); };
+          });
 
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+  svg.append("circle")
+      .attr("r", barHeight)
+      .classed("outer", true)
+      .style("fill", "none")
+      .style("stroke", "black")
+      .style("stroke-width","1.5px");
 
-//});
+  var lines = svg.selectAll("line")
+      .data(keys)
+    .enter().append("line")
+      .attr("y2", -barHeight - 20)
+      .style("stroke", "black")
+      .style("stroke-width",".5px")
+      .attr("transform", function(d, i) { return "rotate(" + (i * 360 / numBars) + ")"; });
 
+  svg.append("g")
+    .attr("class", "x axis")
+    .call(xAxis);
 
+  // Labels
+  var labelRadius = barHeight * 1.025;
+
+  var labels = svg.append("g")
+      .classed("labels", true);
+
+  labels.append("def")
+        .append("path")
+        .attr("id", "label-path")
+        .attr("d", "m0 " + -labelRadius + " a" + labelRadius + " " + labelRadius + " 0 1,1 -0.01 0");
+
+  labels.selectAll("text")
+        .data(keys)
+      .enter().append("text")
+        .style("text-anchor", "middle")
+        .style("font-weight","bold")
+        .style("fill", function(d, i) {return "#3e3e3e";})
+        .append("textPath")
+        .attr("xlink:href", "#label-path")
+        .attr("startOffset", function(d, i) {return i * 100 / numBars + 50 / numBars + '%';})
+        .text(function(d) {return d.toUpperCase(); });
       },
 
       resize: function(width, height) {
