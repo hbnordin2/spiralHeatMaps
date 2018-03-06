@@ -1,6 +1,6 @@
 HTMLWidgets.widget({
 
-  name: 'spiralHeatMap',
+  name: 'polarBarChart',
 
   type: 'output',
 
