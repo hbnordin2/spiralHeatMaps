@@ -2,7 +2,7 @@
 
 R bindings for a D3 visualization inspired by:
 
-https://bl.ocks.org/tomshanley/0a024581fd0b7c4e483203d5bff9631b
+https://bl.ocks.org/bricedev/8aaef92e64007f882267
 
 ## Dependencies
 
@@ -51,5 +51,5 @@ X,.00150
 Y,.01974
 Z,.00074")
 
-spiralHeatMap(pump)
+polarBarChart(pump)
 ```
